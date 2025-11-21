@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Flipkart Clone</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f1f3f6;
+    }
+
+    header {
+      background-color: #2874f0;
+      color: white;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .search-bar input {
+      padding: 6px;
+      width: 300px;
+    }
+
+    .nav-icons {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      position: relative;
+    }
+
+    .nav-icons i {
+      cursor: pointer;
+      color: white;
+      font-size: 18px;
+    }
+
+    .dropdown {
+      position: relative;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      top: 30px;
+      right: 0;
+      background-color: white;
+      color: black;
+      min-width: 150px;
+      box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+      z-index: 20;
+    }
+
+    .dropdown-content a {
+      padding: 10px 16px;
+      display: block;
+      text-decoration: none;
+      color: black;
+    }
+
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+
+    #sidebar {
+      width: 220px;
+      height: 100%;
+      background-color: white;
+      position: fixed;
+      top: 0;
+      left: -250px;
+      transition: 0.3s;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.3);
+      padding: 20px;
+      z-index: 10;
+    }
+
+    #sidebar.active {
+      left: 0;
+    }
+
+    #sidebar h3 {
+      margin-bottom: 20px;
+    }
+
+    #sidebar a {
+      display: block;
+      padding: 10px 0;
+      color: #333;
+      text-decoration: none;
+      border-bottom: 1px solid #eee;
+    }
+
+    .overlay {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      background-color: rgba(0,0,0,0.5);
+      display: none;
+      z-index: 5;
+    }
+
+    .overlay.active {
+      display: block;
+    }
+
+    .scroll-banner-container {
+      width: 100%;
+      overflow: hidden;
+      background-color: white;
+      padding: 10px 0;
+    }
+
+    .scroll-banner {
+      display: flex;
+      width: max-content;
+      animation: scrollBanner 40s linear infinite;
+    }
+
+    .scroll-banner img {
+      width: 100%;
+      max-width: 1000px;
+      height: 300px;
+      object-fit: cover;
+      margin-right: 20px;
+      border-radius: 15px;
+    }
+
+    @keyframes scrollBanner {
+      0% {
+        transform: translateX(0%);
+      }
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+
+    .scroll-banner > div {
+      display: flex;
+    }
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .product-box {
+      background-color: white;
+      padding: 15px;
+      border-radius: 8px;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .product-box img {
+      max-width: 100%;
+      height: 150px;
+      object-fit: contain;
+      margin-bottom: 10px;
+    }
+
+    .product-box h4 {
+      font-size: 16px;
+      margin: 10px 0 5px;
+    }
+
+    .product-box p {
+      font-size: 14px;
+      color: #555;
+    }
+
+    footer {
+      background-color: #172337;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    #cart-panel {
+      position: fixed;
+      top: 0;
+      right: -300px;
+      width: 300px;
+      height: 100%;
+      background-color: white;
+      box-shadow: -2px 0 5px rgba(0,0,0,0.3);
+      z-index: 10;
+      padding: 20px;
+      transition: right 0.3s;
+      overflow-y: auto;
+    }
+
+    #cart-panel.active {
+      right: 0;
+    }
+
+    #cart-panel h3 {
+      margin-bottom: 20px;
+    }
+
+    #cart-panel ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    #cart-panel ul li {
+      margin-bottom: 10px;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <div id="sidebar">
+    <h3>Categories</h3>
+    <a href="#">Electronics</a>
+    <a href="#">Mobiles</a>
+    <a href="#">Fashion</a>
+    <a href="#">Home & Furniture</a>
+    <a href="#">Beauty</a>
+    <a href="#">Grocery</a>
+    <a href="#">Appliances</a>
+    <a href="#">Books</a>
+    <a href="#">Toys</a>
+    <a href="#">Pets</a>
+  </div>
+
+  <!-- Overlay -->
+  <div class="overlay" onclick="closePanels()"></div>
+
+  <!-- Cart Panel -->
+  <div id="cart-panel">
+    <h3>Your Cart</h3>
+    <ul id="cart-items">
+      <li>No items in cart.</li>
+    </ul>
+  </div>
+
+  <!-- Header -->
+  <header>
+    <div class="logo">Flipkart</div>
+    <div class="search-bar">
+      <input type="text" placeholder="Search for products, brands and more">
+    </div>
+    <div class="nav-icons">
+      <i onclick="toggleSidebar()" class="fa fa-bars" title="Categories"></i>
+      <div class="dropdown">
+        <i class="fa fa-user" title="Account"></i>
+        <div class="dropdown-content">
+          <a href="#">Login</a>
+          <a href="#">Sign Up</a>
+          <a href="#">Orders</a>
+          <a href="#">Wishlist</a>
+        </div>
+      </div>
+      <i onclick="toggleCart()" class="fa fa-shopping-cart" title="Cart"></i>
+    </div>
+  </header>
+
+  <!-- Scrolling Banner -->
+  <div class="scroll-banner-container">
+   <div class="scroll-banner">
+  <div>
+    <img src="image/FlipkartBanner.avif" alt="image/Banner 1">
+    <img src="image/Banner2.jpg" alt="image/Banner 2">
+    <img src="image/Banner3.jpg" alt="image/Banner 3" onerror="this.src='image/Banner2.jpg'">
+    <img src="image/Banner33.jpg" alt="Banner 4" onerror="this.src='image/Banner2.jpg'">
+    <img src="image/banner4.jpg" alt="image/Banner 5">
+  </div>
+  <div>
+    <img src="image/FlipkartBanner.avif" alt="image/Banner 1">
+    <img src="image/Banner2.jpg" alt="image/Banner 2">
+    <img src="image/Banner3.jpg" alt="image/Banner 3" onerror="this.src='image/Banner2.jpg'">
+    <img src="image/Banner33.jpg" alt="Banner 4" onerror="this.src='image/Banner2.jpg'">
+    <img src="image/banner4.jpg" alt="image/Banner 5">
+  </div>
+</div>
+
+  </div>
+
+  <!-- Products -->
+  <div class="products">
+    <div class="product-box"><img src="image/flipkart phone img.webp"><h4>Smartphone</h4><p>From ₹1,30,000</p></div>
+    <div class="product-box"><img src="image/flipkart laptop img.webp"><h4>Laptop</h4><p>From ₹49,999</p></div>
+    <div class="product-box"><img src="image/Flipkart fashion.png"><h4>Fashion T-shirt</h4><p>From ₹499</p></div>
+    <div class="product-box"><img src="image/Flipkart Refrigetor img.jpeg"><h4>Refrigerator</h4><p>From ₹12,000</p></div>
+    <div class="product-box"><img src="image/flipkart health.jpg"><h4>Healthcare</h4><p>From ₹7,000</p></div>
+    <div class="product-box"><img src="image/flipkart dog.jpeg"><h4>Pet Dog</h4><p>From ₹5,000</p></div>
+    <div class="product-box"><img src="image/flipkart toy.webp"><h4>Toy</h4><p>From ₹1,000</p></div>
+    <div class="product-box"><img src="image/clothes img.jpj.avif"><h4>Clothes</h4><p>From ₹1,000</p></div>
+    <div class="product-box"><img src="image/flipkart Gadgets.avif"><h4>Gadgets</h4><p>From ₹1,000</p></div>
+    <div class="product-box"><img src="image/Flipkart Deo.webp"><h4>Deodorant</h4><p>From ₹399</p></div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    &copy; 2025 Flipkart Clone. All rights reserved.
+  </footer>
+
+  <!-- Font Awesome -->
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+  <!-- JavaScript -->
+  <script>
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("active");
+      document.querySelector(".overlay").classList.toggle("active");
+    }
+
+    function toggleCart() {
+      document.getElementById("cart-panel").classList.toggle("active");
+      document.querySelector(".overlay").classList.toggle("active");
+    }
+
+    function closePanels() {
+      document.getElementById("sidebar").classList.remove("active");
+      document.getElementById("cart-panel").classList.remove("active");
+      document.querySelector(".overlay").classList.remove("active");
+    }
+  </script>
+
+</body>
+</html>
